@@ -14,7 +14,7 @@ The operators that will be covered are, so far:
 These are the planned steps:
 
 - [x] Document a typical database lifecyle
-- [ ] Define show cases or tasks of that lifecycle to contain in the comparison
+- [x] Define show cases or tasks of that lifecycle to contain in the comparison
 - [ ] Document a local setup for each operator based on `kind` or `minikube`
 - [ ] Document the execution of each defined show case or task for each operator
 - [ ] Create a data-driven comparison
@@ -78,3 +78,14 @@ A typical database lifecycle consists of the following steps:
 - Perform data migration
 - Destroy data
 - Destroy database server
+
+## Test Cases
+
+In order to keep this comparison basic, only the following tasks are taken into consideration:
+
+- Connect to database and execute statements
+- Scale up and down
+- Backup and restore, optionally with Point-in-time Recovery (PITR) if available
+- Recover from Leader DB and Replica DB failure
+
+More test cases might be added in the future.
