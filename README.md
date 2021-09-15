@@ -19,6 +19,21 @@ These are the planned steps:
 - [ ] Document the execution of each defined show case or task for each operator
 - [ ] Create a data-driven comparison
 
+## Cloning
+
+For each operator a [Git Submodule](https://git-scm.com/book/en/v2/Git-Tools-Submodules) was added. In order to also fetch the code from these repositories one needs to run the following commands:
+
+```bash
+# initialize local configuration file
+git submodule init
+
+# fetch all the data
+git submodule update
+
+# alternatively clone this repository as follows
+git clone --recurse-submodules git@github.com:m99coder/postgres-k8s-operator-comparison.git
+```
+
 ## Database Lifecycle Management
 
 ### Service Factors
