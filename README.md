@@ -118,7 +118,7 @@ k3d cluster delete mycluster
 
 Operator-specific setup steps are documented in the respective README files:
 
-- [Zalando Postgres Operator](./zalando/README.md)
-- [CrunchyData Postgres Operator](./crunchydata/README.md)
-- [StackGres](./stackgres/README.md)
-- [KubeDB Operator](./kubedb/README.md)
+- [Zalando Postgres Operator](./docs/ZALANDO.md)
+- [CrunchyData Postgres Operator](./docs/CRUNCHYDATA.md)
+- [StackGres](./docs/STACKGRES.md)
+- [KubeDB Operator](./docs/KUBEDB.md)
