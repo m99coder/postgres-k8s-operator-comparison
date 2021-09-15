@@ -34,7 +34,8 @@ git diff --submodule
 git submodule update
 
 # alternatively clone this repository as follows
-git clone --recurse-submodules git@github.com:m99coder/postgres-k8s-operator-comparison.git
+git clone --recurse-submodules \
+  git@github.com:m99coder/postgres-k8s-operator-comparison.git
 ```
 
 ## Database Lifecycle Management
@@ -118,14 +119,21 @@ To use `k3d` execute the following commands on macOS:
 # install k3d using homebrew
 brew install k3d
 
-# create cluster with 3 nodes to achieve quorum and fault tolerance
-k3d cluster create mycluster --servers 3
+# create cluster
+# - with 3 nodes to achieve quorum and fault tolerance
+# - with 3 agents (formerly worker nodes)
+# - with port mappings (tbd.)
+k3d cluster create mycluster \
+  --servers 3 --agents 3
 
 # set correct context
 kubectl config use-context k3d-mycluster
 
 # check cluster
 kubectl cluster-info
+
+# check underlying containers
+docker ps
 
 # get list of nodes
 kubectl get nodes
@@ -140,3 +148,8 @@ Operator-specific setup steps are documented in the respective README files:
 - [CrunchyData Postgres Operator](./docs/CRUNCHYDATA.md)
 - [StackGres](./docs/STACKGRES.md)
 - [KubeDB Operator](./docs/KUBEDB.md)
+
+## Resources
+
+- [K3S + K3D = K8S: a new perfect match for dev and test](https://en.sokube.ch/post/k3s-k3d-k8s-a-new-perfect-match-for-dev-and-test-1)
+- [Introduction to k3d: Run K3s in Docker](https://www.suse.com/c/introduction-k3d-run-k3s-docker-src/)
