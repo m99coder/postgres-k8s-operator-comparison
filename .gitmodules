@@ -1,0 +1,12 @@
+[submodule "zalando"]
+	path = zalando
+	url = https://github.com/zalando/postgres-operator.git
+[submodule "stackgres"]
+	path = stackgres
+	url = https://gitlab.com/ongresinc/stackgres.git
+[submodule "crunchydata"]
+	path = crunchydata
+	url = git@github.com:CrunchyData/postgres-operator.git
+[submodule "kubedb"]
+	path = kubedb
+	url = git@github.com:kubedb/operator.git
