@@ -15,7 +15,7 @@ These are the planned steps:
 
 - [x] Document a typical database lifecyle
 - [x] Define show cases or tasks of that lifecycle to contain in the comparison
-- [ ] Document a local setup for each operator based on `kind` or `minikube`
+- [ ] Document a local setup for each operator based on `minikube`, `kind`, or `k3d`
 - [ ] Document the execution of each defined show case or task for each operator
 - [ ] Create a data-driven comparison
 
@@ -91,6 +91,32 @@ In order to keep this comparison basic, only the following tasks are taken into 
 More test cases might be added in the future.
 
 ## Local Setups
+
+The first step to setup the operators locally is to start a Kubernetes cluster. For that purpose one can choose between [minikube](https://minikube.sigs.k8s.io/docs/) (single-node setup), [kind](https://kind.sigs.k8s.io/), or [k3d](https://k3d.io/).
+
+To use `k3d` execute the following commands on macOS:
+
+```bash
+# install k3d using homebrew
+brew install k3d
+
+# create cluster with 3 nodes to achieve quorum and fault tolerance
+k3d cluster create mycluster --servers 3
+
+# set correct context
+kubectl config use-context k3d-mycluster
+
+# check cluster
+kubectl cluster-info
+
+# get list of nodes
+kubectl get nodes
+
+# delete cluster
+k3d cluster delete mycluster
+```
+
+Operator-specific setup steps are documented in the respective README files:
 
 - [Zalando Postgres Operator](./zalando/README.md)
 - [CrunchyData Postgres Operator](./crunchydata/README.md)
