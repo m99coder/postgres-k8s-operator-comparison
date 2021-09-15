@@ -13,7 +13,7 @@ The operators that will be covered are, so far:
 
 These are the planned steps:
 
-- [ ] Document a typical database lifecyle
+- [x] Document a typical database lifecyle
 - [ ] Define show cases or tasks of that lifecycle to contain in the comparison
 - [ ] Document a local setup for each operator based on `kind` or `minikube`
 - [ ] Document the execution of each defined show case or task for each operator
