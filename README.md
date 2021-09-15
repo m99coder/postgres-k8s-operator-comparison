@@ -27,6 +27,9 @@ For each operator a [Git Submodule](https://git-scm.com/book/en/v2/Git-Tools-Sub
 # initialize local configuration file
 git submodule init
 
+# check if a submodule was updated
+git diff --submodule
+
 # fetch all the data
 git submodule update
 
