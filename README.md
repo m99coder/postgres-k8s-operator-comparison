@@ -89,3 +89,10 @@ In order to keep this comparison basic, only the following tasks are taken into 
 - Recover from Leader DB and Replica DB failure
 
 More test cases might be added in the future.
+
+## Local Setups
+
+- [Zalando Postgres Operator](./zalando/README.md)
+- [CrunchyData Postgres Operator](./crunchydata/README.md)
+- [StackGres](./stackgres/README.md)
+- [KubeDB Operator](./kubedb/README.md)
