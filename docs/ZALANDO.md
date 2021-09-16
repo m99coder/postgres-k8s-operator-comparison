@@ -29,21 +29,21 @@ kubectl get pod -l name=postgres-operator
 kubectl logs "$(kubectl get pod -l name=postgres-operator --output='name')"
 ```
 
-## Operator UI
+## Create a Postgres cluster
 
 ```bash
-# deploy UI manifests
-kubectl apply \
-  -f ui/manifests/deployment.yaml \
-  -f ui/manifests/ingress.yaml \
-  -f ui/manifests/service.yaml \
-  -f ui/manifests/ui-service-account-rbac.yaml
+# deploy minimal Postgres cluster
+kubectl create -f manifests/minimal-postgres-manifest.yaml
 
-# check if UI pods are running
-kubectl get pod -l name=postgres-operator-ui
+# check the deployed cluster
+kubectl get postgresql
+
+# check created database pods
+kubectl get pods -l application=spilo -L spilo-role
+
+# check created service resources
+kubectl get svc -l application=spilo -L spilo-role
 ```
-
-> So far I was not able to get the Operator UI running as it probably requires the Operator service to be exposed.
 
 ## Connect using psql
 
