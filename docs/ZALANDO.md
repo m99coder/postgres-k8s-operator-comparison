@@ -117,7 +117,7 @@ root@acid-minimal-cluster-0:/home/postgres# patronictl list
 | acid-minimal-cluster-1 | 10.42.3.4 | Replica | running |  1 |         0 |
 +------------------------+-----------+---------+---------+----+-----------+
 
-$ # intentially delete the leader pod
+$ # intentionally delete the leader pod
 $ kubectl delete pod/acid-minimal-cluster-0
 
 $ # check patroni status again to verify that the former replica got promoted to leader
