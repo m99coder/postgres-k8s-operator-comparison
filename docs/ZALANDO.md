@@ -89,3 +89,44 @@ postgres=# SELECT version();
  PostgreSQL 13.4 (Ubuntu 13.4-1.pgdg18.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, 64-bit
 (1 row)
 ```
+
+### Scale up and down
+
+```bash
+# scale up to 3 instances
+sed 's/numberOfInstances: 2/numberOfInstances: 3/g' manifests/minimal-postgres-manifest.yaml | kubectl replace -f -
+
+# scale down again to 2 instances
+kubectl replace -f manifests/minimal-postgres-manifest.yaml
+```
+
+### Backup and restore
+
+*tbw.*
+
+### Recover from failure
+
+```bash
+$ # log into spilo container to check patroni status
+$ kubectl exec -it acid-minimal-cluster-0 -- bash
+root@acid-minimal-cluster-0:/home/postgres# patronictl list
++ Cluster: acid-minimal-cluster (7008520001480880198) ---+----+-----------+
+| Member                 | Host      | Role    | State   | TL | Lag in MB |
++------------------------+-----------+---------+---------+----+-----------+
+| acid-minimal-cluster-0 | 10.42.4.4 | Leader  | running |  1 |           |
+| acid-minimal-cluster-1 | 10.42.3.4 | Replica | running |  1 |         0 |
++------------------------+-----------+---------+---------+----+-----------+
+
+$ # intentially delete the leader pod
+$ kubectl delete pod/acid-minimal-cluster-0
+
+$ # check patroni status again to verify that the former replica got promoted to leader
+$ kubectl exec -it acid-minimal-cluster-1 -- bash
+root@acid-minimal-cluster-1:/home/postgres# patronictl list
++ Cluster: acid-minimal-cluster (7008520001480880198) ---+----+-----------+
+| Member                 | Host      | Role    | State   | TL | Lag in MB |
++------------------------+-----------+---------+---------+----+-----------+
+| acid-minimal-cluster-0 | 10.42.4.5 | Replica | running |  2 |         0 |
+| acid-minimal-cluster-1 | 10.42.3.4 | Leader  | running |  2 |           |
++------------------------+-----------+---------+---------+----+-----------+
+```
