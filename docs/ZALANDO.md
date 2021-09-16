@@ -104,6 +104,39 @@ kubectl replace -f manifests/minimal-postgres-manifest.yaml
 
 *tbw.*
 
+> [Source](https://postgres-operator.readthedocs.io/en/latest/administrator/#wal-archiving-and-physical-basebackups)
+
+Alternatively it’s possible to clone from an existing Postgres cluster like this:
+
+```bash
+# cloning from an existing cluster
+cat <<EOF | kubectl apply -f -
+apiVersion: "acid.zalan.do/v1"
+kind: postgresql
+metadata:
+  name: acid-minimal-cluster-2
+  namespace: default
+spec:
+  teamId: "acid"
+  volume:
+    size: 1Gi
+  numberOfInstances: 2
+  users:
+    zalando:  # database owner
+    - superuser
+    - createdb
+    foo_user: []  # role for application foo
+  databases:
+    foo: zalando  # dbname: owner
+  preparedDatabases:
+    bar: {}
+  postgresql:
+    version: "13"
+  clone:
+    cluster: "acid-minimal-cluster"
+EOF
+```
+
 ### Recover from failure
 
 ```bash
