@@ -122,9 +122,7 @@ brew install k3d
 # create cluster
 # - with 3 nodes to achieve quorum and fault tolerance
 # - with 3 agents (formerly worker nodes)
-# - with port mappings (tbd.)
-k3d cluster create mycluster \
-  --servers 3 --agents 3
+k3d cluster create mycluster --servers 3 --agents 3
 
 # set correct context
 kubectl config use-context k3d-mycluster

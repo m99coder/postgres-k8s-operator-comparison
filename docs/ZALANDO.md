@@ -45,26 +45,25 @@ kubectl get pod -l name=postgres-operator-ui
 
 > So far I was not able to get the Operator UI running as it probably requires the Operator service to be exposed.
 
-## Create a Postgres cluster
-
-```bash
-# deploy minimal Postgres cluster
-kubectl create -f manifests/minimal-postgres-manifest.yaml
-
-# check the deployed cluster
-kubectl get postgresql
-
-# check created database pods
-kubectl get pods -l application=spilo -L spilo-role
-
-# check created service resources
-kubectl get svc -l application=spilo -L spilo-role
-```
-
 ## Connect using psql
 
 ```bash
+# get name of master pod of acid-minimal-cluster
+export PGMASTER=$(kubectl get pods -o jsonpath={.items..metadata.name} -l application=spilo,cluster-name=acid-minimal-cluster,spilo-role=master -n default)
 
+# set up port forwarding
+kubectl port-forward $PGMASTER 5432:5432
+```
+
+```bash
+# retrieve password from secret
+export PGPASSWORD=$(kubectl get secret postgres.acid-minimal-cluster.credentials -o 'jsonpath={.data.password}' | base64 -d)
+
+# enable SSL mode
+export PGSSLMODE=require
+
+# connect to database
+psql -U postgres -h localhost -p 5432
 ```
 
 ## Delete a Postgres cluster
@@ -76,11 +75,7 @@ kubectl delete postgresql acid-minimal-cluster
 ## Cleanup
 
 ```bash
-# delete Operator UI
-kubectl delete deployment.apps/postgres-operator-ui
-kubectl delete service/postgres-operator-ui
-
-# delete Operator
+# delete operator
 kubectl delete deployment.apps/postgres-operator
 kubectl delete service/postgres-operator
 ```
