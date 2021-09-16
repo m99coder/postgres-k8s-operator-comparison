@@ -8,6 +8,7 @@ The operators that will be covered are, so far:
 
 - [Zalando Postgres Operator](https://github.com/zalando/postgres-operator)
 - [CrunchyData Postgres Operator](https://github.com/CrunchyData/postgres-operator)
+- [EnterpriseDB Cloud Native PostgreSQL](https://docs.enterprisedb.io/cloud-native-postgresql/1.8.0/)
 - [StackGres](https://gitlab.com/ongresinc/stackgres)
 - [KubeDB Operator](https://github.com/kubedb/operator)
 
@@ -144,6 +145,7 @@ Operator-specific setup steps are documented in the respective README files:
 
 - [Zalando Postgres Operator](./docs/ZALANDO.md)
 - [CrunchyData Postgres Operator](./docs/CRUNCHYDATA.md)
+- [EnterpriseDB Cloud Native PostgreSQL](./docs/ENTERPRISEDB.md)
 - [StackGres](./docs/STACKGRES.md)
 - [KubeDB Operator](./docs/KUBEDB.md)
 
