@@ -19,7 +19,7 @@ kubectl create -f manifests/postgres-operator.yaml
 kubectl create -f manifests/api-service.yaml
 ```
 
-## Check
+### Check
 
 ```bash
 # check if operator is running
@@ -29,7 +29,7 @@ kubectl get pod -l name=postgres-operator
 kubectl logs "$(kubectl get pod -l name=postgres-operator --output='name')"
 ```
 
-## Create a Postgres cluster
+### Create a Postgres cluster
 
 ```bash
 # deploy minimal Postgres cluster
@@ -45,14 +45,30 @@ kubectl get pods -l application=spilo -L spilo-role
 kubectl get svc -l application=spilo -L spilo-role
 ```
 
-## Connect using psql
+### Delete a Postgres cluster
 
 ```bash
-# get name of master pod of acid-minimal-cluster
-export PGMASTER=$(kubectl get pods -o jsonpath={.items..metadata.name} -l application=spilo,cluster-name=acid-minimal-cluster,spilo-role=master -n default)
+kubectl delete postgresql acid-minimal-cluster
+```
+
+### Cleanup
+
+```bash
+# delete operator
+kubectl delete deployment.apps/postgres-operator
+kubectl delete service/postgres-operator
+```
+
+## Tasks
+
+### Connect to database and execute statements
+
+```bash
+# get name of leader pod of acid-minimal-cluster
+export PGLEADER=$(kubectl get pods -o jsonpath={.items..metadata.name} -l application=spilo,cluster-name=acid-minimal-cluster,spilo-role=master -n default)
 
 # set up port forwarding
-kubectl port-forward $PGMASTER 5432:5432
+kubectl port-forward $PGLEADER 5432:5432
 ```
 
 ```bash
@@ -66,16 +82,10 @@ export PGSSLMODE=require
 psql -U postgres -h localhost -p 5432
 ```
 
-## Delete a Postgres cluster
-
-```bash
-kubectl delete postgresql acid-minimal-cluster
-```
-
-## Cleanup
-
-```bash
-# delete operator
-kubectl delete deployment.apps/postgres-operator
-kubectl delete service/postgres-operator
+```postgres
+postgres=# SELECT version();
+                                                             version
+---------------------------------------------------------------------------------------------------------------------------------
+ PostgreSQL 13.4 (Ubuntu 13.4-1.pgdg18.04+1) on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, 64-bit
+(1 row)
 ```
