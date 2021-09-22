@@ -111,7 +111,91 @@ sed $'s/- name: instance1/- name: instance1\\\n      replicas: 2/g' kustomize/po
 
 # scale down again to 1 instance
 kubectl replace -f kustomize/postgres/postgres.yaml
+```
 
+### Backup and restore
+
+```bash
+# trigger the one-off backup
+kubectl annotate -n postgres-operator postgrescluster hippo \
+  postgres-operator.crunchydata.com/pgbackrest-backup="$( date '+%F_%H:%M:%S' )"
+
+# to re-run the command `--overwrite` is required
+kubectl annotate -n postgres-operator postgrescluster hippo --overwrite \
+  postgres-operator.crunchydata.com/pgbackrest-backup="$( date '+%F_%H:%M:%S' )"
+
+# cloning from an existing cluster
+cat <<EOF | kubectl apply -f -
+apiVersion: postgres-operator.crunchydata.com/v1beta1
+kind: PostgresCluster
+metadata:
+  name: elephant
+spec:
+  dataSource:
+    postgresCluster:
+      clusterName: hippo
+      repoName: repo1
+  image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres-ha:centos8-13.4-0
+  postgresVersion: 13
+  instances:
+    - dataVolumeClaimSpec:
+        accessModes:
+        - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: 1Gi
+  backups:
+    pgbackrest:
+      image: registry.developers.crunchydata.com/crunchydata/crunchy-pgbackrest:centos8-2.33-2
+      repoHost:
+        dedicated: {}
+      repos:
+      - name: repo1
+        volume:
+          volumeClaimSpec:
+            accessModes:
+            - "ReadWriteOnce"
+            resources:
+              requests:
+                storage: 1Gi
+EOF
+```
+
+_Point-in-time-Recovery (PITR)_
+
+```yaml
+spec:
+  dataSource:
+    postgresCluster:
+      clusterName: hippo
+      repoName: repo1
+      options:
+      - --type=time
+      - --target="2021-06-09 14:15:11 EDT"
+```
+
+_In-Place Point-in-time-Recovery (PITR)_
+
+```yaml
+spec:
+  backups:
+    pgbackrest:
+      restore:
+        enabled: true
+        repoName: repo1
+        options:
+        - --type=time
+        - --target="2021-06-09 14:15:11 EDT"
+```
+
+```bash
+# delete clone
+kubectl delete postgresclusters.postgres-operator.crunchydata.com elephant
+```
+
+### Recover from failure
+
+```bash
 # remove a service
 kubectl -n postgres-operator delete svc hippo-primary
 
@@ -128,7 +212,3 @@ hippo=> SELECT NOT pg_catalog.pg_is_in_recovery() is_primary;
 ```
 
 The result `t` (or `true`) means the Postgres instance is a primary.
-
-### Backup and restore
-
-### Recover from failure
