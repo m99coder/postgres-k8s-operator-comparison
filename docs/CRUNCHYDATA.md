@@ -215,11 +215,14 @@ The result `t` (or `true`) means the Postgres instance is a primary.
 
 ## Monitoring
 
+Extend the cluster manifest by the following section:
+
 ```yaml
-monitoring:
-  pgmonitor:
-    exporter:
-     image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres-exporter:ubi8-5.0.2-0
+spec:
+  monitoring:
+    pgmonitor:
+      exporter:
+        image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres-exporter:ubi8-5.0.2-0
 ```
 
 ```bash
