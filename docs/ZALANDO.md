@@ -97,7 +97,8 @@ postgres=# SELECT version();
 
 ```bash
 # scale up to 3 instances
-sed 's/numberOfInstances: 2/numberOfInstances: 3/g' manifests/minimal-postgres-manifest.yaml | kubectl replace -f -
+sed 's/numberOfInstances: 2/numberOfInstances: 3/g' manifests/minimal-postgres-manifest.yaml | \
+  kubectl replace -f -
 
 # scale down again to 2 instances
 kubectl replace -f manifests/minimal-postgres-manifest.yaml

@@ -106,7 +106,8 @@ hippo=> SELECT version();
 
 ```bash
 # scale up to 2 instances
-sed $'s/- name: instance1/- name: instance1\\\n      replicas: 2/g' kustomize/postgres/postgres.yaml | kubectl replace -f -
+sed $'s/- name: instance1/- name: instance1\\\n      replicas: 2/g' kustomize/postgres/postgres.yaml | \
+  kubectl replace -f -
 
 # scale down again to 1 instance
 kubectl replace -f kustomize/postgres/postgres.yaml
