@@ -74,12 +74,12 @@ $ kubectl -n postgres-operator get secret hippo-pguser-hippo \
     --template={{.data.uri}} | base64 --decode
 
 $ # get name of leader pod
-$ export PGLEADER=$(kubectl get pods \
-  -l postgres-operator.crunchydata.com/role=master
-  -o jsonpath={.items..metadata.name})
+$ export PRIMARY_POD=$(kubectl -n postgres-operator get pods \
+  --selector=postgres-operator.crunchydata.com/role=master \
+  -o jsonpath='{.items[*].metadata.labels.postgres-operator\.crunchydata\.com/instance}')
 
 $ # set up port forwarding
-$ kubectl port-forward $PGLEADER 5432:5432
+$ kubectl port-forward "${PRIMARY_POD}-0" 5432:5432
 ```
 
 ```bash
@@ -111,7 +111,23 @@ sed $'s/- name: instance1/- name: instance1\\\n      replicas: 2/g' kustomize/po
 
 # scale down again to 1 instance
 kubectl replace -f kustomize/postgres/postgres.yaml
+
+# remove a service
+kubectl -n postgres-operator delete svc hippo-primary
+
+# remove the primary StatefulSet
+kubectl delete sts -n postgres-operator "${PRIMARY_POD}"
 ```
+
+```postgres
+hippo=> SELECT NOT pg_catalog.pg_is_in_recovery() is_primary;
+ is_primary
+------------
+ t
+(1 row)
+```
+
+The result `t` (or `true`) means the Postgres instance is a primary.
 
 ### Backup and restore
 
