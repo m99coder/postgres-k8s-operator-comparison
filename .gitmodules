@@ -10,3 +10,6 @@
 [submodule "kubedb"]
 	path = kubedb
 	url = git@github.com:kubedb/operator.git
+[submodule "crunchydata-examples"]
+	path = crunchydata-examples
+	url = git@github.com:CrunchyData/postgres-operator-examples.git
