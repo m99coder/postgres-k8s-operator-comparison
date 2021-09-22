@@ -74,7 +74,9 @@ $ kubectl -n postgres-operator get secret hippo-pguser-hippo \
     --template={{.data.uri}} | base64 --decode
 
 $ # get name of leader pod
-$ export PGLEADER=$(kubectl get pods -o jsonpath={.items..metadata.name} -l postgres-operator.crunchydata.com/role=master)
+$ export PGLEADER=$(kubectl get pods \
+  -l postgres-operator.crunchydata.com/role=master
+  -o jsonpath={.items..metadata.name})
 
 $ # set up port forwarding
 $ kubectl port-forward $PGLEADER 5432:5432
@@ -82,7 +84,8 @@ $ kubectl port-forward $PGLEADER 5432:5432
 
 ```bash
 # retrieve password from secret
-export PGPASSWORD=$(kubectl get secret hippo-pguser-hippo -o 'jsonpath={.data.password}' | base64 -d)
+export PGPASSWORD=$(kubectl get secret hippo-pguser-hippo \
+  -o 'jsonpath={.data.password}' | base64 -d)
 
 # enable SSL mode
 export PGSSLMODE=require

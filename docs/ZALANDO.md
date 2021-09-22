@@ -65,7 +65,9 @@ kubectl delete service/postgres-operator
 
 ```bash
 # get name of leader pod of acid-minimal-cluster
-export PGLEADER=$(kubectl get pods -o jsonpath={.items..metadata.name} -l application=spilo,cluster-name=acid-minimal-cluster,spilo-role=master -n default)
+export PGLEADER=$(kubectl get pods \
+  -l application=spilo,cluster-name=acid-minimal-cluster,spilo-role=master \
+  -o jsonpath={.items..metadata.name})
 
 # set up port forwarding
 kubectl port-forward $PGLEADER 5432:5432
@@ -73,7 +75,8 @@ kubectl port-forward $PGLEADER 5432:5432
 
 ```bash
 # retrieve password from secret
-export PGPASSWORD=$(kubectl get secret postgres.acid-minimal-cluster.credentials -o 'jsonpath={.data.password}' | base64 -d)
+export PGPASSWORD=$(kubectl get secret postgres.acid-minimal-cluster.credentials \
+  -o 'jsonpath={.data.password}' | base64 -d)
 
 # enable SSL mode
 export PGSSLMODE=require
