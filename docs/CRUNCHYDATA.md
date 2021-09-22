@@ -243,3 +243,7 @@ kubectl port-forward $GRAFANA_POD 3000:3000
 # delete the monitoring resources
 kubectl delete -k kustomize/monitoring
 ```
+
+## Resources
+
+- [PGO, the Postgres Operator from Crunchy Data](https://access.crunchydata.com/documentation/postgres-operator/5.0.2/)
