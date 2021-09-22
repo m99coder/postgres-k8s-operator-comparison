@@ -128,6 +128,12 @@ k3d cluster create mycluster \
   --agents 3 \
   --volume /tmp/k3dvol:/tmp/k3dvol
 
+# start cluster
+k3d cluster start mycluster
+
+# list clusters
+k3d cluster list
+
 # set correct context
 kubectl config use-context k3d-mycluster
 
@@ -139,6 +145,9 @@ docker ps
 
 # get list of nodes
 kubectl get nodes
+
+# stop cluster
+k3d cluster stop mycluster
 
 # delete cluster
 k3d cluster delete mycluster
