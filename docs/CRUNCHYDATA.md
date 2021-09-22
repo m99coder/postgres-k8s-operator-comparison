@@ -212,3 +212,31 @@ hippo=> SELECT NOT pg_catalog.pg_is_in_recovery() is_primary;
 ```
 
 The result `t` (or `true`) means the Postgres instance is a primary.
+
+## Monitoring
+
+```yaml
+monitoring:
+  pgmonitor:
+    exporter:
+     image: registry.developers.crunchydata.com/crunchydata/crunchy-postgres-exporter:ubi8-5.0.2-0
+```
+
+```bash
+# add the exporter sidecar
+kubectl apply -k kustomize/postgres
+
+# add the monitoring resources
+kubectl apply -k kustomize/monitoring
+
+# get Grafana pod
+export GRAFANA_POD=$(kubectl -n postgres-operator get pods \
+  --selector=name=crunchy-grafana \
+  -o jsonpath='{.items[*].metadata.name}')
+
+# set up port forwarding
+kubectl port-forward $GRAFANA_POD 3000:3000
+
+# delete the monitoring resources
+kubectl delete -k kustomize/monitoring
+```
